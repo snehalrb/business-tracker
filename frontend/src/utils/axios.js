@@ -4,7 +4,7 @@ import axios from "axios";
 const BASE_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:6001/business-tracker"
-    : "https://your-backend-service.onrender.com/business-tracker";
+    : "/business-tracker";
 
 export const endpoint = axios.create({
   baseURL: BASE_URL,
