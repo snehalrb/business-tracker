@@ -6,18 +6,18 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { useParams } from "react-router";
-import AddQuoteItems from "./AddQuoteItems";
-import ErrorDisplay from "./errorDisplay";
-import { quoteItems } from "../utils/utils";
+import { AddQuoteItems } from "./AddQuoteItems";
+import ErrorDisplay from "../errorDisplay";
+import { quoteItems } from "../../utils/utils";
 import {
   generateQuoteNumber,
   fetchAllCustomers,
   createQuote,
   editQuote,
   fetchQuote,
-} from "../utils/api";
+} from "../../utils/api";
 
-const Quote = ({ action }) => {
+export const Quote = ({ action }) => {
   const { id } = useParams();
   //const [items, setItems] = useState([quoteItems]);
   const [totalItemAmt, setTotalItemAmt] = useState(0);
@@ -87,10 +87,13 @@ const Quote = ({ action }) => {
   }, [totalItemAmt]);
 
   const onSubmitCreate = async (data) => {
+    const cust = customerNames.find((c) => c.fullname === data.customername);
+    const custID = cust ? cust._id : undefined;
     const { notes, taxrate, taxrateamt, subtotal, total, items, ...otherdata } =
       data;
     const fullData = {
       ...otherdata,
+      customerId: custID,
       additionalinfo: { notes, taxrate },
       invoicesummary: { taxrateamt, subtotal, total },
       itemdetails: items, // items is child component data
@@ -218,8 +221,8 @@ const Quote = ({ action }) => {
                 >
                   <option value="">Select Customer</option>
                   {customerNames.map((c, index) => (
-                    <option key={index} value={c}>
-                      {c}
+                    <option key={index} value={c.fullname}>
+                      {c.fullname}
                     </option>
                   ))}
                 </select>
@@ -331,5 +334,3 @@ const Quote = ({ action }) => {
     </div>
   );
 };
-
-export default Quote;

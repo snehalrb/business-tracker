@@ -96,6 +96,8 @@ export const createUser = async (req, res) => {
   }
 };
 
+///CUSTOMER DATA MANUIPULATION/////
+
 export const addCustomer = async (req, res) => {
   try {
     const customerData = req.body.data || req.body;
@@ -119,7 +121,7 @@ export const fetchAllCustomers = async (req, res) => {
   try {
     const customers = await Customer.find().sort({ createdAt: -1 }); // -1 newest first, 1 for oldest first
     if (!customers) return res.json({ success: false });
-    return res.json({ success: true, data: customers.map((c) => c.fullname) });
+    return res.json({ success: true, data: customers });
   } catch (e) {
     return res.json({ success: false });
   }
@@ -157,6 +159,19 @@ export const updateCustomer = async (req, res) => {
   }
 };
 
+export const deleteCustomer = async (req, res) => {
+  try {
+    const deleteCustomer = await Customer.findByIdAndDelete(req.params.id);
+    if (!deleteCustomer)
+      return res.json({ success: false, message: "Customer not found!!" });
+    res.json({ success: true, message: "Customer deleted successfully!!" }); //if we put no status default will be 200
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+///QUOTE DATA MANUIPULATION/////
+
 export const generateQuoteNumber = async (req, res) => {
   try {
     // Find last quote sorted by number descending
@@ -189,6 +204,7 @@ export const createQuote = async (req, res) => {
   try {
     const quoteData = req.body.data || req.body;
     const {
+      customerId,
       quotenumber,
       issuedate,
       duedate,
@@ -199,6 +215,7 @@ export const createQuote = async (req, res) => {
       invoicesummary: { taxrateamt, subtotal, total },
     } = quoteData;
     const createNewQuote = new Quote({
+      customerId,
       quotenumber,
       issuedate,
       duedate,
@@ -275,6 +292,30 @@ export const updateQuote = async (req, res) => {
   }
 };
 
+export const fetchAllQuotes = async (req, res) => {
+  try {
+    const quotes = await Quote.find()
+      .populate("customerId")
+      .sort({ createdAt: -1 }); // -1 newest first, 1 for oldest first
+    if (!quotes) return res.json({ success: false });
+    return res.json({ success: true, data: quotes });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+export const deleteQuote = async (req, res) => {
+  try {
+    const deleteQuote = await Quote.findByIdAndDelete(req.params.id);
+    if (!deleteQuote)
+      return res.json({ success: false, message: "Quote not found!!" });
+    res.json({ success: true, message: "Quote deleted successfully!!" });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+///GET COUNT OF ALL DOCS/////
 export const allCount = async (req, res) => {
   try {
     const [customers, quotes] = await Promise.all([
@@ -287,16 +328,6 @@ export const allCount = async (req, res) => {
       success: true,
       data: { customers, quotes },
     });
-  } catch (e) {
-    return res.json({ success: false });
-  }
-};
-
-export const fetchAllQuotes = async (req, res) => {
-  try {
-    const quotes = await Quote.find().sort({ createdAt: -1 }); // -1 newest first, 1 for oldest first
-    if (!quotes) return res.json({ success: false });
-    return res.json({ success: true, data: quotes });
   } catch (e) {
     return res.json({ success: false });
   }

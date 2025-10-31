@@ -1,4 +1,4 @@
-import NavigationPanel from "../components/NavigationPanel";
+import { NavigationPanel } from "../components/Navigation";
 
 const Dashboard = () => {
   return (

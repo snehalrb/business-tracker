@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
-import { editCustomer, addCustomer, fetchCustomer } from "../utils/api.js";
+import { editCustomer, addCustomer, fetchCustomer } from "../../utils/api.js";
 import { useParams } from "react-router";
-import { validateEmail } from "../utils/utils";
-import ErrorDisplay from "./errorDisplay.jsx";
+import { validateEmail } from "../../utils/utils.js";
+import ErrorDisplay from "../errorDisplay.jsx";
 import { useEffect, useState } from "react";
 
-const Customer = ({ action }) => {
+export const Customer = ({ action }) => {
   const { id } = useParams();
   const [customerData, setCustomerData] = useState(null);
 
@@ -40,6 +40,7 @@ const Customer = ({ action }) => {
 
   const onSubmitAdd = async (data) => {
     await addCustomer(data);
+    reset();
   };
 
   const onSubmitEdit = async (data) => {
@@ -72,7 +73,6 @@ const Customer = ({ action }) => {
               <input
                 {...register("fullname", { required: true })}
                 type="text"
-                name="fullname"
                 defaultValue={customerData?.fullname || ""}
                 className="w-full bg-gray-100 border border-gray-200 rounded-md p-2.5 text-sm"
               />
@@ -104,7 +104,6 @@ const Customer = ({ action }) => {
               <input
                 {...register("company", { required: false })}
                 type="text"
-                name="company"
                 defaultValue={customerData?.company || ""}
                 className="w-full bg-gray-100 border border-gray-200 rounded-md p-2.5 text-sm"
               />
@@ -114,15 +113,26 @@ const Customer = ({ action }) => {
                 Phone number*
               </label>
               <input
-                {...register("phone", { required: true })}
+                {...register("phone", {
+                  required: "Phone number is required",
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Only numbers are allowed",
+                  },
+                  minLength: {
+                    value: 10,
+                    message: "Phone number must be 10 digits",
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: "Phone number must be 10 digits",
+                  },
+                })}
                 type="tel"
                 defaultValue={customerData?.phone || ""}
-                name="phone"
-                minLength="10"
-                maxLength="10"
                 className="w-full bg-gray-100 border border-gray-200 rounded-md p-2.5 text-sm"
               />
-              {errors.phone && <ErrorDisplay />}
+              {errors.phone && <ErrorDisplay message={errors.phone.message} />}
             </div>
           </div>
 
@@ -132,7 +142,6 @@ const Customer = ({ action }) => {
             <textarea
               {...register("address", { required: true })}
               rows="3"
-              name="address"
               className="w-full bg-gray-100 border border-gray-200 rounded-md p-2.5 text-sm"
               defaultValue={customerData?.address || ""}
             />
@@ -156,5 +165,3 @@ const Customer = ({ action }) => {
     </div>
   );
 };
-
-export default Customer;

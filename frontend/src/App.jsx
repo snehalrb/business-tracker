@@ -15,6 +15,7 @@ function App() {
         element={<Action actionType={"edit"} />}
       />
       ;
+      <Route path="/customers" element={<Action />} />
       <Route path="/quote/create" element={<Action actionType={"add"} />} />;
       <Route path="/quote/edit/:id" element={<Action actionType={"edit"} />} />
     </Routes>

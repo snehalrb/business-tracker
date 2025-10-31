@@ -5,10 +5,10 @@ import {
   useWatch,
   Watch,
 } from "react-hook-form";
-import ErrorDisplay from "./errorDisplay";
-import { quoteItems } from "../utils/utils";
+import ErrorDisplay from "../errorDisplay";
+import { quoteItems } from "../../utils/utils";
 
-const AddQuoteItems = () => {
+export const AddQuoteItems = () => {
   const {
     control,
     register,
@@ -168,5 +168,3 @@ const AddQuoteItems = () => {
     </div>
   );
 };
-
-export default AddQuoteItems;

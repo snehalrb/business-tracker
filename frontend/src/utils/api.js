@@ -80,6 +80,17 @@ export const editCustomer = async (data, id) => {
   }
 };
 
+export const deleteCustomer = async (id) => {
+  try {
+    const response = await endpoint.delete(`deletecustomer/${id}`);
+    if (response.data.success) {
+      toast.success("Customer deleted successfully!");
+    } else toast.error("Failed to delete customer");
+  } catch (e) {
+    toast.error("error while deleting customer");
+  }
+};
+
 export const generateQuoteNumber = async () => {
   try {
     const response = await endpoint.get("/quotenumber");
@@ -147,5 +158,16 @@ export const fetchQuotes = async () => {
     } else toast.error("Failed to fetch quotes");
   } catch (e) {
     toast.error("error while fetching quotes");
+  }
+};
+
+export const deleteQuote = async (id) => {
+  try {
+    const response = await endpoint.delete(`deletequote/${id}`);
+    if (response.data.success) {
+      toast.success("Quote deleted successfully!");
+    } else toast.error("Failed to delete quote");
+  } catch (e) {
+    toast.error("error while deleting quote");
   }
 };

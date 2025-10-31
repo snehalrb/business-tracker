@@ -1,10 +1,10 @@
-import { allCount } from "../utils/api";
+import { allCount } from "../../utils/api";
 import { useEffect, useState, useContext } from "react";
 import { NavLink } from "react-router";
-import ActiveNavLink from "./ActiveNavLink";
-import { LoginContext } from "../utils/loginContext";
+import { ActiveNavLink } from "./ActiveNavLink";
+import { LoginContext } from "../../utils/loginContext";
 
-const NavigationPanel = () => {
+export const NavigationPanel = () => {
   const [count, setCount] = useState([]);
   const userdetails = useContext(LoginContext);
 
@@ -50,7 +50,7 @@ const NavigationPanel = () => {
             </NavLink>
           </li>
           <li>
-            <ActiveNavLink to="/customer/add" matchPath={"customer"}>
+            <ActiveNavLink to="/customers" matchPath={"customer"}>
               Customers
               <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
                 {count.customers}
@@ -79,5 +79,3 @@ const NavigationPanel = () => {
     </aside>
   );
 };
-
-export default NavigationPanel;

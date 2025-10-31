@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
-import { endpoint } from "../utils/axios.js";
+import { endpoint } from "../../utils/axios.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
-const Signup = () => {
+export const Signup = () => {
   const navigate = useNavigate();
   const {
     register,
@@ -147,5 +147,3 @@ const ErrorDisplay = ({ message }) => {
   !message ? (message = "This field is required") : message;
   return <span className="text-red-500 text-sm mt-1">{message}</span>;
 };
-
-export default Signup;

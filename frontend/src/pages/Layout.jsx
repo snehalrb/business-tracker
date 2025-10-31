@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import NavigationPanel from "../components/NavigationPanel";
+import { NavigationPanel } from "../components/Navigation";
 import { fetchLoggedInUser } from "../utils/api";
 import { LoginContext } from "../utils/loginContext";
 
@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
         <div className="flex min-h-screen">
           <NavigationPanel />
 
-          <main className="flex-1 p-8">{children}</main>
+          <main className="flex-1 p-8 bg-white">{children}</main>
         </div>
       </div>
     </LoginContext.Provider>

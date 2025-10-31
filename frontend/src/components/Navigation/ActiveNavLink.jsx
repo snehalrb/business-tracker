@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router";
 
-const ActiveNavLink = ({ to, matchPath, children }) => {
+export const ActiveNavLink = ({ to, matchPath, children }) => {
   const { pathname } = useLocation();
 
   const baseClass =
@@ -16,5 +16,3 @@ const ActiveNavLink = ({ to, matchPath, children }) => {
     </NavLink>
   );
 };
-
-export default ActiveNavLink;
