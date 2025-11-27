@@ -1,19 +1,20 @@
 import jwt from "jsonwebtoken";
-import { isBlacklisted } from "../utils/blacklistedTokens";
+//import { isBlacklisted } from "../utils/blacklistedTokens";
 
-const authenticate = (req, res, next) => {
-  const authHeader = req.headers.a;
-
+export const createToken = (id, name, email) => {
+  if (!id || !name || !email) return;
   //create token
   const token = jwt.sign(
     {
-      id: authenticateUser._id,
-      name: authenticateUser.fullname,
-      email: authenticateUser.email,
+      id: id,
+      name: name,
+      email: email,
     },
     process.env.JWT_SECRET,
     {
       expiresIn: "7d",
     }
   );
+
+  return token;
 };

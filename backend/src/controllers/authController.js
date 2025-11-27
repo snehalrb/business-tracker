@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import Signup from "../models/Signup.js";
 import Customer from "../models/Customer.js";
 import Quote from "../models/Quote.js";
+import { createToken } from "../middleware/authMiddleware.js";
 
 export const getLogin = async (req, res) => {
   try {
@@ -13,22 +14,15 @@ export const getLogin = async (req, res) => {
       return res.json({ success: false, message: "wrong login detailssss" });
     }
 
-    //create token
-    const token = jwt.sign(
-      {
-        id: authenticateUser._id,
-        name: authenticateUser.fullname,
-        email: authenticateUser.email,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
+    const returnedToken = createToken(
+      authenticateUser._id,
+      authenticateUser.fullname,
+      authenticateUser.email
     );
 
     return res.json({
       success: true,
-      token,
+      returnedToken,
       user: {
         id: authenticateUser._id,
         name: authenticateUser.fullname,

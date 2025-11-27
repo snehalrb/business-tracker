@@ -1,81 +1,111 @@
-import { allCount } from "../../utils/api";
-import { useEffect, useState, useContext } from "react";
-import { NavLink } from "react-router";
+import { useEffect, useContext, useState } from "react";
 import { ActiveNavLink } from "./ActiveNavLink";
 import { LoginContext } from "../../utils/loginContext";
+import { useRefreshContext } from "../../utils/RefreshContext";
+import { NavLink } from "react-router";
 
-export const NavigationPanel = () => {
-  const [count, setCount] = useState([]);
+export const NavigationPanel = ({ sendAllCount, allCount }) => {
   const userdetails = useContext(LoginContext);
+  const { refreshKey } = useRefreshContext();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const fetchAllCount = async () => {
-    try {
-      const res = await allCount();
-      setCount(res);
-    } catch (err) {
-      console.error(err);
-    }
-  };
   useEffect(() => {
-    fetchAllCount();
-  }, []);
+    sendAllCount();
+  }, [refreshKey]);
 
   return (
-    <aside className="w-64 bg-white shadow-md">
-      <div className="p-6">
-        <h1 className="text-blue-600 font-bold text-xl">BUSINESS TRACKER</h1>
-        <p className="text-gray-500 text-sm mt-1">Easy Business Management</p>
-      </div>
-      <div className="mt-6">
-        <div className="px-6 py-2 flex items-center space-x-2 bg-gray-100 rounded cursor-pointer">
-          <span className="font-medium">AB</span>
+    <>
+      <button
+        className="md:hidden fixed top-4 left-4 z-50"
+        onClick={() => setIsOpen(true)}
+      >
+        <span className="text-3xl">&#9776;</span>
+      </button>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
+      <aside
+        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md z-50 transform
+        transition-transform duration-300 
+        md:translate-x-0 md:static 
+        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+      >
+        <div className="p-6 flex justify-between md:block">
           <div>
-            <p className="text-sm font-semibold">{userdetails.fullname}</p>
-            <p className="text-xs text-gray-500">{userdetails.email}</p>
+            <h1 className="text-blue-600 font-bold text-xl">
+              BUSINESS TRACKER
+            </h1>
+            <p className="text-gray-500 text-sm mt-1">
+              Easy Business Management
+            </p>
+          </div>
+
+          {/* Close Button (Mobile Only) */}
+          <button
+            className="md:hidden text-2xl"
+            onClick={() => setIsOpen(false)}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="mt-6">
+          <div className="px-6 py-2 flex items-center space-x-2 bg-gray-100 rounded cursor-pointer">
+            <div>
+              <p className="text-sm font-semibold">{userdetails.fullname}</p>
+              <p className="text-xs text-gray-500">{userdetails.email}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <nav className="mt-6">
-        <ul>
-          <li>
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                isActive
-                  ? " bg-gray-100 px-6 py-2 hover:bg-gray-100 rounded mb-2 flex justify-between items-center cursor-pointer"
-                  : "px-6 py-2 hover:bg-gray-100 rounded mb-2 flex justify-between items-center cursor-pointer"
-              }
+
+        <nav className="mt-6">
+          <ul>
+            <li>
+              <ActiveNavLink to="/dashboard" matchPath={"dashboard"}>
+                Dashboard
+              </ActiveNavLink>
+            </li>
+
+            <li>
+              <ActiveNavLink to="/customers" matchPath={"customer"}>
+                Customers
+                <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
+                  {allCount.customers}
+                </span>
+              </ActiveNavLink>
+            </li>
+
+            <li>
+              <ActiveNavLink to="/quotes" matchPath={"quote"}>
+                Quotes
+                <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
+                  {allCount.quotes}
+                </span>
+              </ActiveNavLink>
+            </li>
+
+            <li
+              style={{ display: "none" }}
+              className="px-6 py-2 hover:bg-gray-100 rounded mb-2 flex justify-between items-center cursor-pointer"
             >
-              Dashboard
-            </NavLink>
-          </li>
-          <li>
-            <ActiveNavLink to="/customers" matchPath={"customer"}>
-              Customers
+              <span>Invoices</span>
               <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
-                {count.customers}
+                24ddd
               </span>
-            </ActiveNavLink>
-          </li>
-          <li>
-            <ActiveNavLink to="/quotes" matchPath={"quote"}>
-              Quotes
-              <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
-                {count.quotes}
-              </span>
-            </ActiveNavLink>
-          </li>
-          <li className="px-6 py-2 hover:bg-gray-100 rounded mb-2 flex justify-between items-center cursor-pointer">
-            <span>Invoices</span>
-            <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
-              24ddd
-            </span>
-          </li>
-          <li className="px-6 py-2 hover:bg-gray-100 rounded mb-2 cursor-pointer">
-            Logout
-          </li>
-        </ul>
-      </nav>
-    </aside>
+            </li>
+
+            <li className="px-6 py-2 hover:bg-gray-100 rounded mb-2 cursor-pointer">
+              <NavLink to="/" style={{ display: "block" }}>
+                Logout
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+    </>
   );
 };

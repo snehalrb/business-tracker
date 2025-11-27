@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { NavigationPanel } from "../components/Navigation";
-import { fetchLoggedInUser } from "../utils/api";
+import { fetchLoggedInUser, allCount } from "../utils/api";
 import { LoginContext } from "../utils/loginContext";
+import { RefreshContextProvider } from "../utils/RefreshContext";
 
 const Layout = ({ children }) => {
   const [user, setUser] = useState({
     fullname: "",
     email: "",
   });
+  const [count, setCount] = useState([]);
 
-  const getLogin = async () => {
+  const getUserLogin = async () => {
     try {
       const res = await fetchLoggedInUser();
       setUser({ fullname: res.fullname, email: res.email });
@@ -17,20 +19,30 @@ const Layout = ({ children }) => {
       console.log("error in getting login details", e);
     }
   };
+  const fetchAllCount = async () => {
+    try {
+      const res = await allCount();
+      setCount(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    getLogin();
+    getUserLogin();
+    fetchAllCount();
   }, []);
 
   return (
     <LoginContext.Provider value={user}>
-      <div className="font-sans">
-        <div className="flex min-h-screen">
-          <NavigationPanel />
-
-          <main className="flex-1 p-8 bg-white">{children}</main>
+      <RefreshContextProvider>
+        <div className="font-sans">
+          <div className="flex min-h-screen">
+            <NavigationPanel sendAllCount={fetchAllCount} allCount={count} />
+            <main className="flex-1 p-8 bg-white">{children}</main>
+          </div>
         </div>
-      </div>
+      </RefreshContextProvider>
     </LoginContext.Provider>
   );
 };

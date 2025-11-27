@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Signup, Login } from "./Login-Signup";
 
 export const Entry = () => {
+  localStorage.removeItem("token");
   const [selectedTab, setSelectedTab] = useState("Login");
   const tabs = ["Login", "Signup"];
   const getButtonClasses = (tabName) =>

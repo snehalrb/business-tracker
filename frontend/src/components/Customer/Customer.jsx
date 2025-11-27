@@ -4,11 +4,12 @@ import { useParams } from "react-router";
 import { validateEmail } from "../../utils/utils.js";
 import ErrorDisplay from "../errorDisplay.jsx";
 import { useEffect, useState } from "react";
+import { useRefreshContext } from "../../utils/RefreshContext.jsx";
 
 export const Customer = ({ action }) => {
   const { id } = useParams();
   const [customerData, setCustomerData] = useState(null);
-
+  const { triggerRefresh } = useRefreshContext();
   const {
     register,
     handleSubmit,
@@ -40,6 +41,7 @@ export const Customer = ({ action }) => {
 
   const onSubmitAdd = async (data) => {
     await addCustomer(data);
+    triggerRefresh();
     reset();
   };
 
@@ -51,11 +53,12 @@ export const Customer = ({ action }) => {
     <div className="p-6 max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <button className="flex items-center text-gray-600 hover:text-black mb-2">
-          ←
-        </button>
-        <h1 className="text-2xl font-semibold">Add New Customer</h1>
-        <p className="text-gray-500 text-sm">Create and manage your invoices</p>
+        <h1 className="text-2xl font-semibold">
+          {action === "add" ? "Add New Customer" : "Edit Customer"}
+        </h1>
+        <p className="text-gray-500 text-sm">
+          Create and manage your customers
+        </p>
       </div>
 
       {/* Form Container */}
@@ -156,11 +159,6 @@ export const Customer = ({ action }) => {
             {action === "add" ? `Add Customer` : `Edit Customer`}
           </button>
         </form>
-      </div>
-
-      {/* Footer Buttons */}
-      <div className="flex items-center gap-3 mt-6">
-        <button className="text-gray-600 px-4 py-2">Cancel</button>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useLocation } from "react-router";
 import Layout from "./Layout";
 import { SearchQuotes } from "../components/Quote";
 import { SearchCustomers } from "../components/Customer";
+import Dashboard from "./Dashboard";
 const Action = ({ actionType }) => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
@@ -13,6 +14,7 @@ const Action = ({ actionType }) => {
     quote: Quote,
     quotes: SearchQuotes,
     customers: SearchCustomers,
+    dashboard: Dashboard,
     // invoice: Invoice,
   };
 

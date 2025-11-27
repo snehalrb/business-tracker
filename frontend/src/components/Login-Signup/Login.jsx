@@ -13,10 +13,9 @@ export const Login = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm();
-  //   {
-  //   defaultValues: { email: "snehaltest@gmail.com", password: "helloworld" },
-  // }
+  } = useForm({
+    defaultValues: { email: "snehaltest@gmail.com", password: "helloworld" },
+  });
 
   const validateEmail = (e) => {
     const email = e.target.value;
@@ -34,17 +33,15 @@ export const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await endpoint.post("/login", data);
-
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
-
-        //navigate("/dashboard");
-        navigate("quote/create");
+        localStorage.setItem("token", response.data.returnedToken);
+        navigate("/dashboard");
       } else setLoginerrors(true);
     } catch (e) {
       toast.error("Error while authenticating");
     }
   };
+
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       {loginerrors && <ErrorDisplay message={"Invalid Login Credentials"} />}

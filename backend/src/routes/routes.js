@@ -33,6 +33,7 @@ router.delete("/deletecustomer/:id", deleteCustomer);
 
 router.post("/createquote", createQuote);
 router.put("/editquote/:id", updateQuote);
+
 router.get("/editquote/:id", fetchQuote);
 router.delete("/deletequote/:id", deleteQuote);
 router.get("/allCount", allCount);

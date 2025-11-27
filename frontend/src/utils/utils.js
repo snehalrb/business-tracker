@@ -44,3 +44,42 @@ export const filterQuotes = (data, q) => {
     });
   }
 };
+
+export const QuotePillStatus = [
+  {
+    label: "ACCEPTED",
+    value: "accepted",
+    class: "bg-green-100 text-green-700",
+  },
+  { label: "REJECTED", value: "rejected", class: "text-red-600 bg-red-100" },
+  {
+    label: "SENT",
+    value: "sent",
+    class: "text-blue-600 bg-blue-100",
+  },
+  {
+    label: "DRAFT",
+    value: "draft",
+    class: "text-yellow-600 bg-yellow-100",
+  },
+];
+
+export const PillColor = (pilltype) => {
+  //console.log("func pill colocr", pilltype);
+  switch (pilltype.toUpperCase()) {
+    case "DRAFT":
+      return "text-yellow-600 bg-yellow-100";
+
+    case "SENT":
+      return "text-blue-600 bg-blue-100";
+
+    case "REJECTED":
+      return "text-red-600 bg-red-100";
+
+    case "ACCEPTED":
+      return "bg-green-100 text-green-700";
+
+    default:
+      return "";
+  }
+};

@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  useForm,
-  FormProvider,
-  useWatch,
-  useFieldArray,
-} from "react-hook-form";
+import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { useParams } from "react-router";
 import { AddQuoteItems } from "./AddQuoteItems";
 import ErrorDisplay from "../errorDisplay";
@@ -16,12 +11,14 @@ import {
   editQuote,
   fetchQuote,
 } from "../../utils/api";
+import { useRefreshContext } from "../../utils/RefreshContext.jsx";
 
 export const Quote = ({ action }) => {
   const { id } = useParams();
   //const [items, setItems] = useState([quoteItems]);
   const [totalItemAmt, setTotalItemAmt] = useState(0);
   const [customerNames, setCustomerNames] = useState([]);
+  const { triggerRefresh } = useRefreshContext();
 
   const methods = useForm({
     defaultValues: {
@@ -100,6 +97,7 @@ export const Quote = ({ action }) => {
     };
 
     await createQuote(fullData);
+    triggerRefresh();
     reset();
     getQuoteNumber();
   };

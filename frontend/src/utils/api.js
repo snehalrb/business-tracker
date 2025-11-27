@@ -114,6 +114,7 @@ export const createQuote = async (data) => {
 };
 
 export const editQuote = async (data, id) => {
+  console.log(data, "this is id", id);
   try {
     const response = await endpoint.put(`editquote/${id}`, data);
     if (response.data.success) {
