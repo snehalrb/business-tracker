@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { useParams } from "react-router";
-import { AddQuoteItems } from "./AddQuoteItems";
-import ErrorDisplay from "../errorDisplay";
-import { quoteItems } from "../../utils/utils";
+import { AddQuoteItems } from "./AddQuoteItems.jsx";
+import ErrorDisplay from "../errorDisplay.jsx";
+import { quoteItems } from "../../utils/utils.js";
 import {
   generateQuoteNumber,
   fetchAllCustomers,
   createQuote,
   editQuote,
   fetchQuote,
-} from "../../utils/api";
+} from "../../utils/api.js";
 import { useRefreshContext } from "../../utils/RefreshContext.jsx";
 
 export const Quote = ({ action }) => {

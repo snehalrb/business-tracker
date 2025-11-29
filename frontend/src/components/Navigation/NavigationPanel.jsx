@@ -74,7 +74,7 @@ export const NavigationPanel = ({ sendAllCount, allCount }) => {
               <ActiveNavLink to="/customers" matchPath={"customer"}>
                 Customers
                 <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
-                  {allCount.customers}
+                  {allCount.customers ?? 0}
                 </span>
               </ActiveNavLink>
             </li>
@@ -83,7 +83,7 @@ export const NavigationPanel = ({ sendAllCount, allCount }) => {
               <ActiveNavLink to="/quotes" matchPath={"quote"}>
                 Quotes
                 <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
-                  {allCount.quotes}
+                  {allCount.quotes ?? 0}
                 </span>
               </ActiveNavLink>
             </li>

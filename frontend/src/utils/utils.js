@@ -49,7 +49,7 @@ export const QuotePillStatus = [
   {
     label: "ACCEPTED",
     value: "accepted",
-    class: "bg-green-100 text-green-700",
+    class: "text-green-700 bg-green-200",
   },
   { label: "REJECTED", value: "rejected", class: "text-red-600 bg-red-100" },
   {

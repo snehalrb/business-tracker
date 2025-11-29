@@ -31,6 +31,7 @@ export const SearchCustomers = () => {
 
   const handleDelete = async (id) => {
     await deleteCustomer(id);
+    getAllCustomers();
   };
 
   return (
@@ -70,11 +71,11 @@ export const SearchCustomers = () => {
         {customerData &&
           customerData.map((c, index) => {
             return (
-              <Link to={`/customer/edit/${c._id}`} className="contents">
-                <div
-                  className="grid grid-cols-1 md:grid-cols-7 border-t hover:bg-gray-50 text-sm text-gray-700"
-                  key={index}
-                >
+              <div
+                className="grid grid-cols-1 md:grid-cols-7 border-t hover:bg-gray-50 text-sm text-gray-700"
+                key={index}
+              >
+                <Link to={`/customer/edit/${c._id}`} className="contents">
                   <div className="flex md:block justify-between items-center py-2 px-4">
                     <span className="md:hidden font-semibold text-gray-500">
                       Customer Name:
@@ -108,18 +109,17 @@ export const SearchCustomers = () => {
                     </span>
                     {c.phone}
                   </div>
-
-                  <div className="flex md:block justify-between items-center py-2 px-4">
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(c._id)}
-                      className="text-red-500 hover:text-red-600"
-                    >
-                      <MdDelete />
-                    </button>
-                  </div>
+                </Link>
+                <div className="flex md:block justify-between items-center py-2 px-4">
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(c._id)}
+                    className="text-red-500 hover:text-red-600"
+                  >
+                    <MdDelete />
+                  </button>
                 </div>
-              </Link>
+              </div>
             );
           })}
       </div>
