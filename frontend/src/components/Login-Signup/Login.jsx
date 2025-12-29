@@ -54,6 +54,7 @@ export const Login = () => {
           type="email"
           placeholder="youremail@test.com"
           onChange={validateEmail}
+          defaultValue={"snehaltest@gmail.com"}
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
         />
         {errors.email && <ErrorDisplay message={errors.email.message} />}
@@ -67,6 +68,7 @@ export const Login = () => {
           {...register("password", { required: true })}
           type="password"
           placeholder="*******"
+          defaultValue={"helloworld"}
           className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
         />
         {errors.password && <ErrorDisplay />}
