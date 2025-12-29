@@ -2,47 +2,77 @@ import mongoose from "mongoose";
 
 const invoiceSchema = new mongoose.Schema(
   {
-    quotenumber: {
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+    },
+    invoicenumber: {
       type: String,
       required: true,
+      unique: true,
     },
-    expirydate: {
-      type: String,
+    issuedate: {
+      type: Date,
+      required: true,
+    },
+    duedate: {
+      type: Date,
       required: true,
     },
     status: {
       type: String,
       required: true,
     },
-    item: {
-      description: {
-        type: String,
-        required: true,
-      },
-      rate: {
-        type: Number,
-        required: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-      },
-      amount: {
-        type: Number,
-        required: true,
-      },
+    customername: {
+      type: String,
+      required: true,
     },
-    additionalInfo: {
-      tax: {
+    itemdetails: [
+      {
+        description: {
+          type: String,
+          required: true,
+        },
+        rate: {
+          type: Number,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        amount: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    additionalinfo: {
+      taxrate: {
         type: Number,
         required: true,
       },
       notes: {
         type: String,
+        required: false,
+      },
+    },
+    invoicesummary: {
+      taxrateamt: {
+        type: Number,
+        required: true,
+      },
+      subtotal: {
+        type: Number,
+        required: true,
+      },
+      total: {
+        type: Number,
         required: true,
       },
     },
   },
+
   { timestamps: true }
 );
 

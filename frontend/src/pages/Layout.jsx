@@ -37,9 +37,9 @@ const Layout = ({ children }) => {
     <LoginContext.Provider value={user}>
       <RefreshContextProvider>
         <div className="font-sans">
-          <div className="flex min-h-screen">
+          <div className="flex min-h-screen flex-col:md">
             <NavigationPanel sendAllCount={fetchAllCount} allCount={count} />
-            <main className="flex-1 p-8 bg-white">{children}</main>
+            <main className="flex-1 p-0 md:p-8 mt-8 md:mt-0">{children}</main>
           </div>
         </div>
       </RefreshContextProvider>

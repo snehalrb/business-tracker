@@ -1,6 +1,17 @@
 import { endpoint } from "./axios.js";
 import toast from "react-hot-toast";
 
+export const allCount = async () => {
+  try {
+    const response = await endpoint.get("/allCount");
+    if (response.data.success) {
+      return response.data.data;
+    } else toast.error("Failed to fetch quote count");
+  } catch (e) {
+    toast.error("error while fetching quote count");
+  }
+};
+
 export const fetchLoggedInUser = async () => {
   const token = localStorage.getItem("token");
   try {
@@ -29,6 +40,7 @@ export const fetchLoggedInUser = async () => {
 //   }
 // };
 
+/*CUSTOMER */
 export const fetchCustomer = async (id) => {
   try {
     const response = await endpoint.get(`editcustomer/${id}`, {
@@ -91,6 +103,81 @@ export const deleteCustomer = async (id) => {
   }
 };
 
+/*INVOICE*/
+
+export const generateInvoiceNumber = async () => {
+  try {
+    const response = await endpoint.get("/invoicenumber");
+    if (response.data.success) {
+      return response.data.data;
+    } else toast.error("Failed to generate invoice number");
+  } catch (e) {
+    toast.error("error while generating invoice");
+  }
+};
+
+export const createInvoice = async (data) => {
+  try {
+    const response = await endpoint.post("/createinvoice", data);
+    if (response.data.success) {
+      toast.success("Data added successfully!");
+    } else toast.error("Failed to save invoice data");
+  } catch (e) {
+    toast.error("error while saving invoice data");
+  }
+};
+
+export const editInvoice = async (data, id) => {
+  console.log(data, "this is id", id);
+  try {
+    const response = await endpoint.put(`editinvoice/${id}`, data);
+    if (response.data.success) {
+      toast.success("Invoice Data saved successfully!");
+      return response.data.data;
+      //navigate("/");
+    } else toast.error("Failed to save invoice data");
+  } catch (e) {
+    toast.error("error while submitting invoice form");
+  }
+};
+
+export const fetchInvoice = async (id) => {
+  try {
+    const response = await endpoint.get(`editinvoice/${id}`, {
+      headers: { "Cache-Control": "no-cache" }, // prevents 304 due to caching
+    });
+    if (response.data.success) {
+      return response.data.data;
+    } else toast.error("Failed to fetch invoice");
+  } catch (e) {
+    toast.error("error while fetching invoice");
+  }
+};
+
+export const fetchInvoices = async () => {
+  try {
+    const response = await endpoint.get("/getallinvoices");
+    if (response.data.success) {
+      return response.data.data;
+    } else toast.error("Failed to fetch invoices");
+  } catch (e) {
+    toast.error("error while fetching invoices");
+  }
+};
+
+export const deleteInvoice = async (id) => {
+  try {
+    const response = await endpoint.delete(`deleteinvoice/${id}`);
+    if (response.data.success) {
+      toast.success("Quote deleted successfully!");
+    } else toast.error("Failed to delete invoice");
+  } catch (e) {
+    toast.error("error while deleting invoice");
+  }
+};
+
+/*QUOTE*/
+
 export const generateQuoteNumber = async () => {
   try {
     const response = await endpoint.get("/quotenumber");
@@ -137,17 +224,6 @@ export const fetchQuote = async (id) => {
     } else toast.error("Failed to fetch quote");
   } catch (e) {
     toast.error("error while fetching quote");
-  }
-};
-
-export const allCount = async () => {
-  try {
-    const response = await endpoint.get("/allCount");
-    if (response.data.success) {
-      return response.data.data;
-    } else toast.error("Failed to fetch quote count");
-  } catch (e) {
-    toast.error("error while fetching quote count");
   }
 };
 

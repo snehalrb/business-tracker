@@ -5,8 +5,7 @@ export const DeleteModal = ({ open, onCancel, onConfirm }) => {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-80 animate-fadeIn">
         <p className="text-gray-600 text-sm mb-6">
-          Are you sure you want to delete this quote? This action cannot be
-          undone.
+          Are you sure you want to delete? This action cannot be undone.
         </p>
 
         <div className="flex justify-end gap-3">

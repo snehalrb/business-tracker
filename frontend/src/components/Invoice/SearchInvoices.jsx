@@ -2,13 +2,13 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { MdDelete, MdShare } from "react-icons/md";
-import { fetchQuotes, deleteQuote, editQuote } from "../../utils/api";
+import { fetchInvoices, deleteInvoice, editInvoice } from "../../utils/api";
 import { SearchBox } from "../SearchBox";
-import { filterQuotes, QuotePillStatus, PillColor } from "../../utils/utils";
+import { filterInvoices, PillStatus, PillColor } from "../../utils/utils";
 import { DeleteModal } from "../../utils/DeleteModal";
 
-export const SearchQuotes = () => {
-  const [quoteData, setQuoteData] = useState([]);
+export const SearchInvoices = () => {
+  const [invoiceData, setInvoiceData] = useState([]);
   const [queryData, setQueryData] = useState("");
   const [deleteId, setDeleteId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,13 +17,11 @@ export const SearchQuotes = () => {
     defaultValues: { status: {} },
   });
 
-  const watchStatus = watch("status");
-
-  /* FETCH ALL QUOTES */
-  const getAllQuotes = async () => {
+  /* FETCH ALL INVOICES */
+  const getAllInvoices = async () => {
     try {
-      const res = await fetchQuotes();
-      setQuoteData(res);
+      const res = await fetchInvoices();
+      setInvoiceData(res);
 
       reset({
         status: Object.fromEntries(
@@ -36,24 +34,24 @@ export const SearchQuotes = () => {
   };
 
   useEffect(() => {
-    getAllQuotes();
+    getAllInvoices();
   }, []);
 
-  /*FILTER QUOTE */
-  const displayedQuotes = useMemo(() => {
-    if (!queryData) return quoteData;
-    return filterQuotes(quoteData, queryData);
-  }, [queryData, quoteData]);
+  /*FILTER Invoice */
+  const displayedInvoices = useMemo(() => {
+    if (!queryData) return invoiceData;
+    return filterInvoices(invoiceData, queryData);
+  }, [queryData, invoiceData]);
 
   /*UPDATE STATUS */
   const updateStatus = useCallback(
-    async (newStatus, quoteId) => {
-      setValue(`status.${quoteId}`, newStatus);
+    async (newStatus, invoiceId) => {
+      setValue(`status.${invoiceId}`, newStatus);
 
-      setQuoteData((prev) =>
-        prev.map((q) => (q._id === quoteId ? { ...q, status: newStatus } : q))
+      setInvoiceData((prev) =>
+        prev.map((q) => (q._id === invoiceId ? { ...q, status: newStatus } : q))
       );
-      const fullData = quoteData.find((q) => q._id === quoteId);
+      const fullData = invoiceData.find((q) => q._id === invoiceId);
       if (!fullData) return;
 
       const updatedData = {
@@ -62,19 +60,19 @@ export const SearchQuotes = () => {
       };
 
       try {
-        await editQuote(updatedData, quoteId);
+        await editInvoice(updatedData, invoiceId);
         console.log("Status updated on server");
       } catch (e) {
         console.log("Error updating status", e);
       }
     },
-    [setValue, quoteData]
+    [setValue, invoiceData]
   );
 
-  /*DELETE QUOTE */
+  /*DELETE Invoice */
   const handleDelete = async (id) => {
-    await deleteQuote(id);
-    getAllQuotes();
+    await deleteInvoice(id);
+    getAllInvoices();
   };
 
   const formatDate = (isoDate) => {
@@ -90,23 +88,23 @@ export const SearchQuotes = () => {
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-800">Quotes</h1>
+            <h1 className="text-2xl font-semibold text-gray-800">Invoices</h1>
             <p className="text-sm text-gray-500">
-              Create and manage your quotations and proposals
+              Create and manage your invoices and proposals
             </p>
           </div>
 
           <Link
-            to="/quote/create"
+            to="/invoice/create"
             className="mt-3 md:mt-0 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium"
           >
-            <span className="text-lg font-bold">+</span> Create Quote
+            <span className="text-lg font-bold">+</span> Create Invoice
           </Link>
         </div>
 
         {/* SEARCH */}
         <SearchBox
-          placeholder="Search quotes by quote number, customer name, email, phone number or total amount"
+          placeholder="Search invoices by invoice number, customer name, email, phone number or total amount"
           searchquery={(query) => setQueryData(query)}
         />
 
@@ -114,7 +112,7 @@ export const SearchQuotes = () => {
         <div className="border border-gray-100 rounded-lg overflow-hidden mt-4">
           {/* HEADER */}
           <div className="hidden md:grid grid-cols-9 bg-gray-50 text-gray-600 text-sm font-medium">
-            <div className="py-2 px-4">Quote No.</div>
+            <div className="py-2 px-4">Invoice No.</div>
             <div className="py-2 px-4">Expiry Date</div>
             <div className="py-2 px-4">Customer Name</div>
             <div className="py-2 px-4 md:col-span-2">Email ID</div>
@@ -124,7 +122,7 @@ export const SearchQuotes = () => {
           </div>
 
           {/* ROWS */}
-          {displayedQuotes.map((q) => {
+          {displayedInvoices.map((q) => {
             const watchedValue = watch(`status.${q._id}`);
 
             return (
@@ -132,8 +130,8 @@ export const SearchQuotes = () => {
                 className="grid grid-cols-1 md:grid-cols-9 border-t hover:bg-gray-50 text-sm text-gray-700"
                 key={q._id}
               >
-                <Link to={`/quote/edit/${q._id}`} className="contents">
-                  <div className="py-2 px-4">{q.quotenumber}</div>
+                <Link to={`/invoice/edit/${q._id}`} className="contents">
+                  <div className="py-2 px-4">{q.invoicenumber}</div>
                   <div className="py-2 px-4">{formatDate(q.duedate)}</div>
                   <div className="py-2 px-4">{q.customername}</div>
                   <div className="py-2 px-4 md:col-span-2">
@@ -155,7 +153,7 @@ export const SearchQuotes = () => {
                         watchedValue
                       )}`}
                     >
-                      {QuotePillStatus.map((s) => (
+                      {PillStatus.map((s) => (
                         <option key={s.value} value={s.value}>
                           {s.label}
                         </option>

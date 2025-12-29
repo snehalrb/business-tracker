@@ -1,2 +1,2 @@
-export { Quote } from "./Quote";
-export { SearchQuotes } from "./SearchQuotes";
+export { Invoice } from "./Invoice";
+export { SearchInvoices } from "./SearchInvoices";

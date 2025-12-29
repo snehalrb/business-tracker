@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Customer from "./Customer.js";
 
 const quoteSchema = new mongoose.Schema(
   {

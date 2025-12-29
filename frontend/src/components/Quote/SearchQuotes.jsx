@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { MdDelete, MdShare } from "react-icons/md";
 import { fetchQuotes, deleteQuote, editQuote } from "../../utils/api";
 import { SearchBox } from "../SearchBox";
-import { filterQuotes, QuotePillStatus, PillColor } from "../../utils/utils";
+import { filterQuotes, PillStatus, PillColor } from "../../utils/utils";
 import { DeleteModal } from "../../utils/DeleteModal";
 
 export const SearchQuotes = () => {
@@ -17,14 +17,11 @@ export const SearchQuotes = () => {
     defaultValues: { status: {} },
   });
 
-  const watchStatus = watch("status");
-
   /* FETCH ALL QUOTES */
   const getAllQuotes = async () => {
     try {
       const res = await fetchQuotes();
       setQuoteData(res);
-
       reset({
         status: Object.fromEntries(
           res.map((q) => [q._id, q.status.toLowerCase()])
@@ -155,7 +152,7 @@ export const SearchQuotes = () => {
                         watchedValue
                       )}`}
                     >
-                      {QuotePillStatus.map((s) => (
+                      {PillStatus.map((s) => (
                         <option key={s.value} value={s.value}>
                           {s.label}
                         </option>

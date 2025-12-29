@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from "react";
 import { ActiveNavLink } from "./ActiveNavLink";
 import { LoginContext } from "../../utils/loginContext";
 import { useRefreshContext } from "../../utils/RefreshContext";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 
 export const NavigationPanel = ({ sendAllCount, allCount }) => {
   const userdetails = useContext(LoginContext);
@@ -13,10 +13,14 @@ export const NavigationPanel = ({ sendAllCount, allCount }) => {
     sendAllCount();
   }, [refreshKey]);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
   return (
-    <>
+    <div className="w-full md:w-auto fixed bg-blue-500 h-12 md:static md:bg-transparent md:h-auto">
       <button
-        className="md:hidden fixed top-4 left-4 z-50"
+        className="md:hidden fixed top-2 left-4 z-50 text-white font-bold"
         onClick={() => setIsOpen(true)}
       >
         <span className="text-3xl">&#9776;</span>
@@ -88,14 +92,13 @@ export const NavigationPanel = ({ sendAllCount, allCount }) => {
               </ActiveNavLink>
             </li>
 
-            <li
-              style={{ display: "none" }}
-              className="px-6 py-2 hover:bg-gray-100 rounded mb-2 flex justify-between items-center cursor-pointer"
-            >
-              <span>Invoices</span>
-              <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
-                24ddd
-              </span>
+            <li>
+              <ActiveNavLink to="/invoices" matchPath={"invoice"}>
+                Invoices
+                <span className="bg-gray-200 text-gray-700 text-xs rounded-full px-2">
+                  {allCount.invoices ?? 0}
+                </span>
+              </ActiveNavLink>
             </li>
 
             <li className="px-6 py-2 hover:bg-gray-100 rounded mb-2 cursor-pointer">
@@ -106,6 +109,6 @@ export const NavigationPanel = ({ sendAllCount, allCount }) => {
           </ul>
         </nav>
       </aside>
-    </>
+    </div>
   );
 };

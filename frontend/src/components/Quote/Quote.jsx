@@ -15,7 +15,6 @@ import { useRefreshContext } from "../../utils/RefreshContext.jsx";
 
 export const Quote = ({ action }) => {
   const { id } = useParams();
-  //const [items, setItems] = useState([quoteItems]);
   const [totalItemAmt, setTotalItemAmt] = useState(0);
   const [customerNames, setCustomerNames] = useState([]);
   const { triggerRefresh } = useRefreshContext();
@@ -133,10 +132,6 @@ export const Quote = ({ action }) => {
     };
     console.log("data for edit", fullData);
     const response = await editQuote(fullData, id);
-    // reset({
-    //   ...response,
-    //   itemsdetails: items, // reapply updated items
-    // });
   };
 
   return (

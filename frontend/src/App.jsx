@@ -18,6 +18,14 @@ function App() {
       <Route path="/customers" element={<Action />} />
       <Route path="/quote/create" element={<Action actionType={"add"} />} />
       <Route path="/quote/edit/:id" element={<Action actionType={"edit"} />} />
+
+      <Route path="/invoices" element={<Action />} />
+      <Route path="/invoice/create" element={<Action actionType={"add"} />} />
+      <Route
+        path="/invoice/edit/:id"
+        element={<Action actionType={"edit"} />}
+      />
+
       <Route path="/logout" element={<HomePage />} />
     </Routes>
   );

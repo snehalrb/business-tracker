@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import Signup from "../models/Signup.js";
 import Customer from "../models/Customer.js";
+import Invoice from "../models/Invoice.js";
 import Quote from "../models/Quote.js";
 import { createToken } from "../middleware/authMiddleware.js";
 
@@ -168,10 +169,10 @@ export const deleteCustomer = async (req, res) => {
 
 export const generateQuoteNumber = async (req, res) => {
   try {
-    // Find last quote sorted by number descending
-    const lastQuote = await Quote.findOne().sort({ quotenumber: -1 });
+    // Find last invoice sorted by number descending
+    const lastQuote = await Invoice.findOne().sort({ quotenumber: -1 });
 
-    let nextNumber = 1; // default if no quotes exist
+    let nextNumber = 1; // default if no invoices exist
     let lastQuoteNumber = lastQuote !== null ? lastQuote.quotenumber : "Q-0000";
     //console.log(lastQuoteNumber);
     if (lastQuoteNumber) {
@@ -208,7 +209,7 @@ export const createQuote = async (req, res) => {
       additionalinfo: { taxrate, notes },
       invoicesummary: { taxrateamt, subtotal, total },
     } = quoteData;
-    const createNewQuote = new Quote({
+    const createNewQuote = new Invoice({
       customerId,
       quotenumber,
       issuedate,
@@ -236,7 +237,7 @@ export const createQuote = async (req, res) => {
 
 export const fetchQuote = async (req, res) => {
   try {
-    const quoteById = await Quote.findById(req.params.id);
+    const quoteById = await Invoice.findById(req.params.id);
     if (!quoteById) return res.json({ success: false });
     return res.json({ success: true, data: quoteById });
   } catch (e) {
@@ -258,7 +259,7 @@ export const updateQuote = async (req, res) => {
       invoicesummary: { taxrateamt, subtotal, total },
     } = quoteData;
 
-    const updatedQuote = await Quote.findByIdAndUpdate(
+    const updatedQuote = await Invoice.findByIdAndUpdate(
       req.params.id,
       {
         quotenumber,
@@ -300,10 +301,153 @@ export const fetchAllQuotes = async (req, res) => {
 
 export const deleteQuote = async (req, res) => {
   try {
-    const deleteQuote = await Quote.findByIdAndDelete(req.params.id);
+    const deleteQuote = await Invoice.findByIdAndDelete(req.params.id);
     if (!deleteQuote)
-      return res.json({ success: false, message: "Quote not found!!" });
-    res.json({ success: true, message: "Quote deleted successfully!!" });
+      return res.json({ success: false, message: "Invoice not found!!" });
+    res.json({ success: true, message: "Invoice deleted successfully!!" });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+///Invoice DATA MANUIPULATION/////
+
+export const generateInvoiceNumber = async (req, res) => {
+  try {
+    // Find last invoice sorted by number descending
+    const lastInvoice = await Invoice.findOne().sort({ invoicenumber: -1 });
+
+    let nextNumber = 1; // default if no invoices exist
+    let lastInvoiceNumber =
+      lastInvoice !== null ? lastInvoice.invoicenumber : "I-0000";
+    if (lastInvoiceNumber) {
+      nextNumber =
+        Number(
+          lastInvoiceNumber.substring(
+            lastInvoiceNumber.length - 4,
+            lastInvoiceNumber.length
+          )
+        ) + 1;
+    }
+    const formattedInvoice = `I-${String(nextNumber).padStart(4, "0")}`;
+    if (!formattedInvoice) return res.json({ success: false });
+    return res.json({ success: true, data: formattedInvoice });
+  } catch (error) {
+    console.error(error);
+    return res.json({ success: false });
+  }
+};
+
+export const createInvoice = async (req, res) => {
+  try {
+    const invoiceData = req.body.data || req.body;
+    const {
+      customerId,
+      invoicenumber,
+      issuedate,
+      duedate,
+      status,
+      customername,
+      itemdetails,
+      additionalinfo: { taxrate, notes },
+      invoicesummary: { taxrateamt, subtotal, total },
+    } = invoiceData;
+    const createNewInvoice = new Invoice({
+      customerId,
+      invoicenumber,
+      issuedate,
+      duedate,
+      status,
+      customername,
+      itemdetails,
+      additionalinfo: {
+        taxrate,
+        notes,
+      },
+      invoicesummary: {
+        taxrateamt,
+        subtotal,
+        total,
+      },
+    });
+    await createNewInvoice.save();
+    if (!createNewInvoice) return res.json({ success: false });
+    return res.json({ success: true });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+export const fetchInvoice = async (req, res) => {
+  try {
+    const invoiceById = await Invoice.findById(req.params.id);
+    if (!invoiceById) return res.json({ success: false });
+    return res.json({ success: true, data: invoiceById });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+export const updateInvoice = async (req, res) => {
+  try {
+    const invoiceData = req.body.data || req.body;
+    const {
+      invoicenumber,
+      issuedate,
+      duedate,
+      status,
+      customername,
+      itemdetails,
+      additionalinfo: { taxrate, notes },
+      invoicesummary: { taxrateamt, subtotal, total },
+    } = invoiceData;
+
+    const updatedInvoice = await Invoice.findByIdAndUpdate(
+      req.params.id,
+      {
+        invoicenumber,
+        issuedate,
+        duedate,
+        status,
+        customername,
+        itemdetails,
+        additionalinfo: {
+          taxrate,
+          notes,
+        },
+        invoicesummary: {
+          taxrateamt,
+          subtotal,
+          total,
+        },
+      },
+      { new: true }
+    );
+    if (!updatedInvoice) return res.json({ success: false });
+    return res.json({ success: true, data: updatedInvoice });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+export const fetchAllInvoices = async (req, res) => {
+  try {
+    const invoices = await Invoice.find()
+      .populate("customerId")
+      .sort({ createdAt: -1 }); // -1 newest first, 1 for oldest first
+    if (!invoices) return res.json({ success: false });
+    return res.json({ success: true, data: invoices });
+  } catch (e) {
+    return res.json({ success: false });
+  }
+};
+
+export const deleteInvoice = async (req, res) => {
+  try {
+    const deleteInvoice = await Invoice.findByIdAndDelete(req.params.id);
+    if (!deleteInvoice)
+      return res.json({ success: false, message: "Invoice not found!!" });
+    res.json({ success: true, message: "Invoice deleted successfully!!" });
   } catch (e) {
     return res.json({ success: false });
   }
@@ -312,15 +456,17 @@ export const deleteQuote = async (req, res) => {
 ///GET COUNT OF ALL DOCS/////
 export const allCount = async (req, res) => {
   try {
-    const [customers, quotes] = await Promise.all([
+    const [customers, invoices, quotes] = await Promise.all([
       Customer.countDocuments(),
+      Invoice.countDocuments(),
       Quote.countDocuments(),
     ]);
-
-    if (!quotes || !customers) return res.json({ success: false });
+    //console.log({ data: { customers, invoices, quotes } });
+    if (invoices == null || customers == null || quotes == null)
+      return res.json({ success: false });
     return res.json({
       success: true,
-      data: { customers, quotes },
+      data: { customers, invoices, quotes },
     });
   } catch (e) {
     return res.json({ success: false });

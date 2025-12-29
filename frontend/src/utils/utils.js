@@ -18,6 +18,13 @@ export const quoteItems = {
   amount: 0,
 };
 
+export const invoiceItems = {
+  description: "",
+  rate: 0,
+  quantity: 0,
+  amount: 0,
+};
+
 export const filterCustomers = (data, q) => {
   if (data && q) {
     return data.filter(
@@ -45,7 +52,21 @@ export const filterQuotes = (data, q) => {
   }
 };
 
-export const QuotePillStatus = [
+export const filterInvoices = (data, i) => {
+  if (data && i) {
+    return data.filter((d) => {
+      return (
+        d.invoicenumber.toLowerCase().includes(i.toLowerCase()) ||
+        d.customername.toLowerCase().includes(i.toLowerCase()) ||
+        d.invoicesummary.total.toString().includes(i.toLowerCase()) ||
+        d.customerId.email.toLowerCase().includes(i.toLowerCase()) ||
+        d.customerId.phone.toString().includes(i.toLowerCase())
+      );
+    });
+  }
+};
+
+export const PillStatus = [
   {
     label: "ACCEPTED",
     value: "accepted",

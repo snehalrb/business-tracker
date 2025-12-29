@@ -1,10 +1,4 @@
-import { useEffect, useState } from "react";
-import {
-  useFormContext,
-  useFieldArray,
-  useWatch,
-  Watch,
-} from "react-hook-form";
+import { useFormContext, useFieldArray } from "react-hook-form";
 import ErrorDisplay from "../errorDisplay";
 import { quoteItems } from "../../utils/utils";
 
@@ -58,8 +52,8 @@ export const AddQuoteItems = () => {
       {fields.map((i, index) => {
         return (
           <div className="space-y-3" key={i.id}>
-            <div className="grid grid-cols-12 gap-3 items-center my-4 bg-gray-50">
-              <div className="col-span-5">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end my-4 bg-gray-50 p-3 rounded-lg">
+              <div className="md:col-span-5">
                 <label className="block text-xs font-medium text-gray-600 mb-1">
                   Description
                 </label>
@@ -74,7 +68,7 @@ export const AddQuoteItems = () => {
                   className="w-full bg-gray-100 text-gray-700 text-sm rounded-lg border border-gray-200 px-2 py-2"
                 />
               </div>
-              <div className="col-span-2">
+              <div className="md:col-span-2">
                 <label className="block text-xs font-medium text-gray-600 mb-1">
                   Rate
                 </label>
@@ -93,7 +87,7 @@ export const AddQuoteItems = () => {
                   />
                 </div>
               </div>
-              <div className="col-span-2">
+              <div className="md:col-span-2">
                 <label className="block text-xs font-medium text-gray-600 mb-1">
                   Quantity
                 </label>
@@ -112,7 +106,7 @@ export const AddQuoteItems = () => {
                   />
                 </div>
               </div>
-              <div className="col-span-2">
+              <div className="md:col-span-2">
                 <label className="block text-xs font-medium text-gray-600 mb-1">
                   Amount
                 </label>
@@ -126,10 +120,10 @@ export const AddQuoteItems = () => {
                   />
                 </div>
               </div>
-              <div className="col-span-1 flex justify-center mt-4">
+              <div className="md:col-span-1 flex justify-end md:justify-center">
                 <button
                   type="button"
-                  className="text-red-500 hover:text-red-700 text-lg"
+                  className="text-red-500 hover:text-red-700 text-lg mt-2 md:mt-6"
                   onClick={() => remove(index)}
                 >
                   🗑️

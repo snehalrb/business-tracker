@@ -1,28 +1,27 @@
 import { useState, useEffect } from "react";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { useParams } from "react-router";
-import { AddQuoteItems } from "./AddQuoteItems.jsx";
+import { AddInvoiceItems } from "./AddInvoiceItems.jsx";
 import ErrorDisplay from "../errorDisplay.jsx";
-import { quoteItems } from "../../utils/utils.js";
+import { invoiceItems } from "../../utils/utils.js";
 import {
-  generateQuoteNumber,
+  generateInvoiceNumber,
   fetchAllCustomers,
-  createQuote,
-  editQuote,
-  fetchQuote,
+  createInvoice,
+  editInvoice,
+  fetchInvoice,
 } from "../../utils/api.js";
 import { useRefreshContext } from "../../utils/RefreshContext.jsx";
 
-export const Quote = ({ action }) => {
+export const Invoice = ({ action }) => {
   const { id } = useParams();
-  //const [items, setItems] = useState([quoteItems]);
   const [totalItemAmt, setTotalItemAmt] = useState(0);
   const [customerNames, setCustomerNames] = useState([]);
   const { triggerRefresh } = useRefreshContext();
 
   const methods = useForm({
     defaultValues: {
-      items: [quoteItems],
+      items: [invoiceItems],
       taxrate: 10,
       subtotal: 0,
       total: 0,
@@ -46,10 +45,10 @@ export const Quote = ({ action }) => {
     name: "items", // watch the full array
   });
 
-  const getQuoteNumber = async () => {
+  const getInvoiceNumber = async () => {
     try {
-      const res = await generateQuoteNumber();
-      if (!id) setValue("quotenumber", res);
+      const res = await generateInvoiceNumber();
+      if (!id) setValue("invoicenumber", res);
     } catch (err) {
       console.error(err);
     }
@@ -65,7 +64,7 @@ export const Quote = ({ action }) => {
   };
 
   useEffect(() => {
-    getQuoteNumber();
+    getInvoiceNumber();
     getCustomers();
   }, []);
 
@@ -96,16 +95,16 @@ export const Quote = ({ action }) => {
       itemdetails: items, // items is child component data
     };
 
-    await createQuote(fullData);
+    await createInvoice(fullData);
     triggerRefresh();
     reset();
-    getQuoteNumber();
+    getInvoiceNumber();
   };
 
   useEffect(() => {
     if (action === "edit" && id) {
       (async () => {
-        const response = await fetchQuote(id);
+        const response = await fetchInvoice(id);
 
         reset({
           ...response,
@@ -132,11 +131,7 @@ export const Quote = ({ action }) => {
       itemdetails: items, // items is child component data
     };
     console.log("data for edit", fullData);
-    const response = await editQuote(fullData, id);
-    // reset({
-    //   ...response,
-    //   itemsdetails: items, // reapply updated items
-    // });
+    const response = await editInvoice(fullData, id);
   };
 
   return (
@@ -150,28 +145,28 @@ export const Quote = ({ action }) => {
         >
           <div className="mb-6">
             <h1 className="text-2xl font-semibold">
-              {id ? `Edit Quote` : `Create New Quote`}
+              {id ? `Edit Quote` : `Create New Invoice`}
             </h1>
             <p className="text-gray-500">
               {id ? `Edit` : `Create`} and manage your invoices
             </p>
           </div>
 
-          {/* --- Quotation Details --- */}
+          {/* --- Invoice Details --- */}
           <div className="mb-6 border p-4 rounded-lg bg-gray-50">
-            <h2 className="text-lg font-medium mb-4">Quotation Details</h2>
+            <h2 className="text-lg font-medium mb-4">Invoice Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Quote Number
+                  Invoice Number
                 </label>
                 <input
-                  {...register("quotenumber")}
-                  name="quotenumber"
+                  {...register("invoicenumber")}
+                  name="invoicenumber"
                   type="text"
                   className="border rounded px-3 py-2 bg-gray-100"
                   readOnly
-                  placeholder="Quote Number"
+                  placeholder="Invoice Number"
                 />
               </div>
 
@@ -246,10 +241,10 @@ export const Quote = ({ action }) => {
           </div>
 
           {/* --- Item Details --- */}
-          <AddQuoteItems />
+          <AddInvoiceItems />
 
           {/* --- Additional Info + Summary --- */}
-          {/* <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow"> */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Additional Information */}
             <div className="border p-5 rounded-lg bg-gray-50">
@@ -316,7 +311,7 @@ export const Quote = ({ action }) => {
               type="submit"
               className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded text-sm"
             >
-              {action === "add" ? `Create Quote` : `Edit Quote`}
+              {action === "add" ? `Create Invoice` : `Edit Invoice`}
             </button>
           </div>
           {/* </div> */}
